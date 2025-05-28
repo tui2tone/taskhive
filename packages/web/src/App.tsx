@@ -1,10 +1,13 @@
 import { useState } from 'react'
 import PageLayout from './layouts/PageLayout'
+import TaskLists from './components/TaskLists/TaskLists'
+import TaskInput from './components/TaskInput/TaskInput'
 
 function App() {
   return (
     <PageLayout>
-      Dashboard
+      <TaskLists />
+      <TaskInput />
     </PageLayout>
   )
 }
