@@ -2,7 +2,7 @@
 
 ## Demo
 
-https://taskhive.betterfox.dev
+https://taskhive.clevercat.dev
 
 ## TechStack
 
@@ -10,7 +10,6 @@ https://taskhive.betterfox.dev
 
 - React + Vite + Typescript
 - Tailwind
-- React Context
 
 ### Backend
 
@@ -20,17 +19,17 @@ https://taskhive.betterfox.dev
 ## Feature Design
 
 - [x] Mobile Responsive
-- [ ] Todo Features
+- [x] Todo Features
+  - [x] Use React Context to Manage State
   - [x] Checkbox Toggle
   - [x] Priority Badge
+  - [x] CRUD Tasks API Call
 - [ ] Todo List Filter
   - [ ] Unfinished / Finished
   - [ ] Priority
 - [x] Loading Skeleton
-- [ ] Toast Notification
-- [ ] Autofocus on "Add new todo input box"
-  - [ ] After typing, Expand for option selector for Priority, Date, Estimate Time.
-
+- [x] Toast Notification
+- [x] After typing, Expand for option selector for Priority, Date, Estimate Time.
 
 ## Author
 
