@@ -1,15 +1,18 @@
-import { useState } from 'react'
-import PageLayout from './layouts/PageLayout'
-import TaskLists from './components/TaskLists/TaskLists'
-import TaskInput from './components/TaskInput/TaskInput'
+import { useState } from "react";
+import PageLayout from "./layouts/PageLayout";
+import TaskLists from "./components/TaskLists/TaskLists";
+import TaskInput from "./components/TaskInput/TaskInput";
+import { TodoProvider } from "./contexts/Todo.provider";
 
 function App() {
   return (
-    <PageLayout>
-      <TaskLists />
-      <TaskInput />
-    </PageLayout>
-  )
+    <TodoProvider>
+      <PageLayout>
+        <TaskLists />
+        <TaskInput />
+      </PageLayout>
+    </TodoProvider>
+  );
 }
 
-export default App
+export default App;

@@ -1,43 +1,37 @@
+import { TodoSyncStatus, useTodos } from "../../contexts/Todo.provider";
 import TaskItem from "./TaskItem";
 
 const TaskLists = () => {
-  const items = [
-    {
-      id: 1,
-      title: "Task 1",
-      priorityId: 3,
-      status: 0,
-    },
-    {
-      id: 2,
-      title: "Task 2",
-      priorityId: 2,
-      status: 0,
-    },
-    {
-      id: 3,
-      title: "Task 3",
-      priorityId: 4,
-      status: 0,
-    },
-    {
-      id: 4,
-      title: "Task 4",
-      priorityId: 1,
-      status: 1,
-    },
-    {
-      id: 5,
-      title: "Task 5",
-      priorityId: 3,
-      status: 1,
-    },
-  ];
+  const { state } = useTodos();
   return (
     <div className="flex flex-col gap-3">
-      {items.map((item) => {
-        return <TaskItem key={item.id} item={item} />;
-      })}
+      {state.status != TodoSyncStatus.FETCHING && (
+        <>
+          {state.todos?.map((item) => {
+            return <TaskItem key={item.uuid} item={item} />;
+          })}
+        </>
+      )}
+      {/* Loading State */}
+      {state.status == TodoSyncStatus.FETCHING && (
+        <>
+          {[0, 1, 2, 3, 4].map(() => {
+            return (
+              <div className="bg-white px-4 py-4 border border-gray-100 rounded flex items-center justify-center gap-3">
+                <div className="basis-[40px]">
+                  <div className="h-6 rounded w-full bg-gray-100 animate-pulse"></div>
+                </div>
+                <div className="basis-[100px]">
+                  <div className="h-6 rounded w-full bg-gray-100 animate-pulse"></div>
+                </div>
+                <div className="flex-1">
+                  <div className="h-6 rounded w-full bg-gray-100 animate-pulse"></div>
+                </div>
+              </div>
+            );
+          })}
+        </>
+      )}
     </div>
   );
 };
