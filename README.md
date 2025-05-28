@@ -44,3 +44,17 @@ https://taskhive.betterfox.dev
 - [ ] Animation on Added / Completed / Deleted Item
 - [ ] Autofocus on "Add new todo input box"
   - [ ] After typing, Expand for option selector for Priority, Date, Estimate Time.
+
+
+## Prototype Design
+
+Figma: [https://www.figma.com/design/7mO31oshVwhWUdRS7Vl25O/Task-Hive?node-id=0-1&m=dev&t=DaVpATd7xWfKSXHt-1](https://www.figma.com/design/7mO31oshVwhWUdRS7Vl25O/Task-Hive?node-id=0-1&m=dev&t=DaVpATd7xWfKSXHt-1)
+
+## Author
+
+Charuwit N.
+(Full-Stack Developer)
+
+## License
+
+MIT
