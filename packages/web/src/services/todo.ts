@@ -14,7 +14,6 @@ export async function getTodos() {
   }
 }
 
-
 export async function createTodo(dto: Todo) {
   try {
     const response = await fetch(`${import.meta.env.VITE_APP_API_URL}/todos`, {
@@ -35,7 +34,6 @@ export async function createTodo(dto: Todo) {
   }
 }
 
-
 export async function updateTodo(dto: Todo) {
   try {
     const response = await fetch(`${import.meta.env.VITE_APP_API_URL}/todos/${dto.uuid}`, {
@@ -55,7 +53,6 @@ export async function updateTodo(dto: Todo) {
     return [];
   }
 }
-
 
 export async function deleteTodo(dto: Todo) {
   try {

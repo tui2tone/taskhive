@@ -15,10 +15,7 @@ export const TodoSyncStatus = {
   INIT: 0,
   FETCHING: 1,
   FETCHED_SUCCESS: 2,
-  FETCHED_FAILED: 3,
-  SYNCING: 4,
-  SYNCED_SUCCESS: 5,
-  SYNCED_FAILED: 6,
+  FETCHED_FAILED: 3
 };
 
 export interface Todo {
@@ -42,9 +39,6 @@ interface TodoAction {
     | "TODO_FETCHING"
     | "TODO_FETCHED_SUCCESS"
     | "TODO_FETCHED_FAILED"
-    | "TODO_SYNCING"
-    | "TODO_SYNCING_SUCCESS"
-    | "TODO_SYNCING_FAILED"
     | "ADD_TODO"
     | "TOGGLE_TODO"
     | "UPDATE_TODO"
@@ -84,12 +78,6 @@ const todoReducer = (state: TodoState, action: TodoAction): TodoState => {
       };
     case "TODO_FETCHED_FAILED":
       return { status: TodoSyncStatus.FETCHED_FAILED, todos: [] };
-    case "TODO_SYNCING":
-      return { status: TodoSyncStatus.SYNCING, todos: [...state.todos] };
-    case "TODO_SYNCING_SUCCESS":
-      return { status: TodoSyncStatus.SYNCED_SUCCESS, todos: [...state.todos] };
-    case "TODO_SYNCING_FAILED":
-      return { status: TodoSyncStatus.SYNCED_FAILED, todos: [...state.todos] };
     case "ADD_TODO":
       return {
         todos: [
@@ -177,6 +165,7 @@ export const TodoProvider: React.FC<{ children: ReactNode }> = ({
     });
     await service.updateTodo(data);
   };
+  
   const toggleTodo = async (data: Todo) => {
     const toggledTodo = {
       ...data,
