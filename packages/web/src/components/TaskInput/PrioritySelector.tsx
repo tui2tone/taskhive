@@ -1,5 +1,6 @@
 import React from "react";
 import TaskOption, { type TaskOptionItem } from "./TaskOption";
+import { Controller } from "react-hook-form";
 
 export const priorityOptions: TaskOptionItem[] = [
   {
@@ -34,11 +35,28 @@ export const priorityOptions: TaskOptionItem[] = [
 ];
 
 interface PrioritySelectorProps {
+  control: any;
+  name: string;
 }
 
 const PrioritySelector: React.FC<PrioritySelectorProps> = ({
+  control,
+  name,
 }) => {
-  return <TaskOption title="Priority" items={priorityOptions} />;
+  return (
+    <Controller
+      control={control}
+      name={name}
+      render={({ field: { onChange, value } }) => (
+        <TaskOption
+          title="Priority"
+          items={priorityOptions}
+          selectedValue={value}
+          onChange={onChange}
+        />
+      )}
+    />
+  );
 };
 
 export default PrioritySelector;

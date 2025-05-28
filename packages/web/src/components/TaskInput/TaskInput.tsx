@@ -4,20 +4,29 @@ import TaskOption from "./TaskOption";
 import PrioritySelector from "./PrioritySelector";
 import { useTodos } from "../../contexts/Todo.provider";
 import toast from "react-hot-toast";
+import cx from "classnames";
 
 type TaskInputs = {
   text: string;
   priorityId: number;
 };
 
+const DefaultPriorityID = 3;
+
 const TaskInput = () => {
   const {
+    control,
     register,
     handleSubmit,
-    watch,
     reset,
+    watch,
     formState: { errors },
-  } = useForm<TaskInputs>();
+  } = useForm<TaskInputs>({
+    defaultValues: {
+      priorityId: DefaultPriorityID,
+    },
+  });
+  const inputText = watch("text");
 
   const { dispatch } = useTodos();
   const onSubmit: SubmitHandler<TaskInputs> = (data) => {
@@ -25,13 +34,14 @@ const TaskInput = () => {
       type: "ADD_TODO",
       payload: {
         text: data.text,
-        priorityId: 3,
+        priorityId: data.priorityId,
         isCompleted: false,
       },
     });
 
     reset({
       text: "",
+      priorityId: DefaultPriorityID,
     });
   };
 
@@ -48,12 +58,23 @@ const TaskInput = () => {
         <div className="container mx-auto px-4 py-4 md:py-8 max-w-screen-lg min-h-32 flex items-start justify-start">
           <div className="bg-white rounded-lg border border-gray-100 shadow-xl w-full">
             <input
-              className="w-full active:border-amber-200 border-b border-gray-100 px-4 py-6 shadow-gray-200"
+              className="w-full active:border-amber-200 outline-none px-4 py-6 shadow-gray-200"
               placeholder="What needs to be done?"
               {...register("text", { required: true })}
             ></input>
-            <div className="w-full flex px-4 py-4">
-              <PrioritySelector />
+
+            <div
+              className={cx(
+                "w-full flex overflow-hidden border-t border-gray-100 transition-all duration-500",
+                {
+                  [`h-0`]: inputText?.length === 0,
+                  [`h-[100px]`]: inputText?.length > 0,
+                }
+              )}
+            >
+              <div className="px-4 py-4">
+                <PrioritySelector control={control} name="priorityId" />
+              </div>
             </div>
           </div>
         </div>
