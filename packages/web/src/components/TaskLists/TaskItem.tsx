@@ -6,7 +6,6 @@ import cx from "classnames";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import {
   CheckIcon,
-  ChevronDownIcon,
   EllipsisVerticalIcon,
   XMarkIcon,
 } from "@heroicons/react/20/solid";
