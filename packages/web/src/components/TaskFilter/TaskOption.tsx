@@ -15,7 +15,7 @@ interface TaskOptionProps {
   selectedValue: number;
 }
 
-const TaskOption = ({ title, items, onChange, selectedValue }: TaskOptionProps) => {
+const TaskOption = ({ items, onChange, selectedValue }: TaskOptionProps) => {
   return (
     <div>
       <div className="flex flex-wrap gap-2">

@@ -1,8 +1,6 @@
 import { useForm, type SubmitHandler } from "react-hook-form";
 import PrioritySelector from "./PrioritySelector";
 import { useTodos } from "../../contexts/Todo.provider";
-import toast from "react-hot-toast";
-import cx from "classnames";
 import { useEffect } from "react";
 
 type TaskFilters = {
@@ -14,11 +12,9 @@ const DefaultPriorityID = 0;
 const TaskFilter = () => {
   const {
     control,
-    register,
     handleSubmit,
-    reset,
     watch,
-    formState: { errors },
+    formState: { },
   } = useForm<TaskFilters>({
     defaultValues: {
       priorityId: DefaultPriorityID,
@@ -26,7 +22,7 @@ const TaskFilter = () => {
   });
 
   const { setFilter } = useTodos();
-  const onSubmit: SubmitHandler<TaskFilters> = (data) => {};
+  const onSubmit: SubmitHandler<TaskFilters> = () => {};
 
   const data = watch();
   useEffect(() => {
