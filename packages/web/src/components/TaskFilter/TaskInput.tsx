@@ -32,7 +32,7 @@ const TaskFilter = () => {
       });
     }
     setFilterData();
-  }, [data]);
+  }, [data.priorityId]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>

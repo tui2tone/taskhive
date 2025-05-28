@@ -10,12 +10,13 @@ import React, {
   type ReactNode,
 } from "react";
 import * as service from "../services/todo";
+import toast from "react-hot-toast";
 
 export const TodoSyncStatus = {
   INIT: 0,
   FETCHING: 1,
   FETCHED_SUCCESS: 2,
-  FETCHED_FAILED: 3
+  FETCHED_FAILED: 3,
 };
 
 export interface Todo {
@@ -55,7 +56,7 @@ const TodoContext = createContext<{
   toggleTodo: (dto: Todo) => void;
   deleteTodo: (dto: Todo) => void;
   setFilter: (dto: TodoFilter) => void;
-  filteredTodos: Todo[]
+  filteredTodos: Todo[];
 }>({
   state: { todos: [], status: TodoSyncStatus.INIT },
   dispatch: () => null,
@@ -64,7 +65,7 @@ const TodoContext = createContext<{
   toggleTodo: () => {},
   deleteTodo: () => {},
   setFilter: () => {},
-  filteredTodos: []
+  filteredTodos: [],
 });
 
 const todoReducer = (state: TodoState, action: TodoAction): TodoState => {
@@ -117,14 +118,17 @@ export const TodoProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const [state, dispatch] = useReducer(todoReducer, { todos: [] });
   const [filter, setFilter] = useState<TodoFilter>({
-    priorityId: 0
+    priorityId: 0,
   });
 
   const filteredTodos = useMemo(() => {
-    return state.todos?.filter(m => {
-      if (filter.priorityId!== 0) return m?.priorityId === filter.priorityId
-      else return true;
-      });
+    return state.todos?.filter((m) => {
+      if (filter.priorityId !== 0) {
+        return m?.priorityId === filter.priorityId;
+      } else {
+        return true;
+      }
+    });
   }, [filter, state.todos]);
 
   // Init Load Data
@@ -133,10 +137,9 @@ export const TodoProvider: React.FC<{ children: ReactNode }> = ({
       try {
         dispatch({ type: "TODO_FETCHING" });
         // Add Timeout for Show Loading State
-        setTimeout(async () => {
-          const results = await service.getTodos();
-          dispatch({ type: "TODO_FETCHED_SUCCESS", todos: results });
-        }, 250);
+        await new Promise((resolve) => setTimeout(resolve, 250));
+        const results = await service.getTodos();
+        dispatch({ type: "TODO_FETCHED_SUCCESS", todos: results });
       } catch (error) {
         dispatch({ type: "TODO_FETCHED_FAILED" });
       }
@@ -145,49 +148,75 @@ export const TodoProvider: React.FC<{ children: ReactNode }> = ({
   }, []);
 
   const addTodo = async (data: Todo) => {
-    const newTodo = {
-      uuid: uuidv4(),
-      text: data.text,
-      priorityId: data.priorityId,
-      isCompleted: false,
-    };
-    dispatch({
-      type: "ADD_TODO",
-      payload: newTodo,
-    });
+    try {
+      const newTodo = {
+        uuid: uuidv4(),
+        text: data.text,
+        priorityId: data.priorityId,
+        isCompleted: false,
+      };
+      await service.createTodo(newTodo);
+      dispatch({
+        type: "ADD_TODO",
+        payload: newTodo,
+      });
+    } catch (error) {
+      toast.error(`Something went wrong, Please try again!`);
+    }
+  };
 
-    await service.createTodo(newTodo);
-  };
   const updateTodo = async (data: Todo) => {
-    dispatch({
-      type: "UPDATE_TODO",
-      payload: data,
-    });
-    await service.updateTodo(data);
+    try {
+      await service.updateTodo(data);
+      dispatch({
+        type: "UPDATE_TODO",
+        payload: data,
+      });
+    } catch (error) {
+      toast.error(`Something went wrong, Please try again!`);
+    }
   };
-  
+
   const toggleTodo = async (data: Todo) => {
-    const toggledTodo = {
-      ...data,
-      isCompleted: !data.isCompleted,
-    } as Todo;
-    dispatch({
-      type: "TOGGLE_TODO",
-      payload: toggledTodo,
-    });
-    await service.updateTodo(toggledTodo);
+    try {
+      const toggledTodo = {
+        ...data,
+        isCompleted: !data.isCompleted,
+      } as Todo;
+      await service.updateTodo(toggledTodo);
+      dispatch({
+        type: "TOGGLE_TODO",
+        payload: toggledTodo,
+      });
+    } catch (error) {
+      toast.error(`Something went wrong, Please try again!`);
+    }
   };
   const deleteTodo = async (data: Todo) => {
-    dispatch({
-      type: "REMOVE_TODO",
-      payload: data,
-    });
-    await service.deleteTodo(data);
+    try {
+      await service.deleteTodo(data);
+      dispatch({
+        type: "REMOVE_TODO",
+        payload: data,
+      });
+      toast.success(`Todo is deleted.`);
+    } catch (error) {
+      toast.error(`Something went wrong, Please try again!`);
+    }
   };
 
   return (
     <TodoContext.Provider
-      value={{ state, dispatch, addTodo, updateTodo, toggleTodo, deleteTodo, setFilter, filteredTodos }}
+      value={{
+        state,
+        dispatch,
+        addTodo,
+        updateTodo,
+        toggleTodo,
+        deleteTodo,
+        setFilter,
+        filteredTodos,
+      }}
     >
       {children}
     </TodoContext.Provider>

@@ -1,4 +1,4 @@
-import { PlusCircleIcon } from "@heroicons/react/20/solid";
+import { PlusCircleIcon, XCircleIcon } from "@heroicons/react/20/solid";
 import { TodoSyncStatus, useTodos } from "../../contexts/Todo.provider";
 import TaskItem from "./TaskItem";
 import { motion, AnimatePresence } from "framer-motion";
@@ -64,6 +64,19 @@ const TaskLists = () => {
               </div>
             );
           })}
+        </>
+      )}
+      {/* Failed State */}
+      {state.status == TodoSyncStatus.FETCHED_FAILED && (
+        <>
+          <div className="text-center py-20">
+            <div className="text-red-400 text-xl flex items-center justify-center">
+              <XCircleIcon className="size-20 text-red-300" />
+            </div>
+            <p className="text-red-400 text-lg py-4">
+              Something went wrong, Please try again.
+            </p>
+          </div>
         </>
       )}
     </div>
