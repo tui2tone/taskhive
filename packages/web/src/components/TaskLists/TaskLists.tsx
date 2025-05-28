@@ -15,9 +15,9 @@ const TaskLists = () => {
       {/* Loading State */}
       {state.status == TodoSyncStatus.FETCHING && (
         <>
-          {[0, 1, 2, 3, 4].map(() => {
+          {[0, 1, 2, 3, 4].map((item) => {
             return (
-              <div className="bg-white px-4 py-4 border border-gray-100 rounded flex items-center justify-center gap-3">
+              <div key={item} className="bg-white px-4 py-4 border border-gray-100 rounded flex items-center justify-center gap-3">
                 <div className="basis-[40px]">
                   <div className="h-6 rounded w-full bg-gray-100 animate-pulse"></div>
                 </div>

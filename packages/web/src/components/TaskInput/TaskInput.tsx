@@ -3,6 +3,7 @@ import type { TaskOptionItem } from "./TaskOption";
 import TaskOption from "./TaskOption";
 import PrioritySelector from "./PrioritySelector";
 import { useTodos } from "../../contexts/Todo.provider";
+import toast from "react-hot-toast";
 
 type TaskInputs = {
   text: string;
@@ -34,8 +35,15 @@ const TaskInput = () => {
     });
   };
 
+  const onSubmitError = () => {
+    // Text is required
+    if (errors?.text?.type === "required") {
+      toast.error("Please type your task");
+    }
+  };
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit, onSubmitError)}>
       <div className="fixed bottom-0 left-0 w-full h-auto">
         <div className="container mx-auto px-4 py-4 md:py-8 max-w-screen-lg min-h-32 flex items-start justify-start">
           <div className="bg-white rounded-lg border border-gray-100 shadow-xl w-full">

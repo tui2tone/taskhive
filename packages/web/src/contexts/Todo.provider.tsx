@@ -22,7 +22,7 @@ export interface Todo {
   text: string;
   uuid?: string;
   priorityId?: number;
-  isCompleted: boolean;
+  isCompleted?: boolean;
 }
 
 interface TodoState {
@@ -88,7 +88,7 @@ const todoReducer = (state: TodoState, action: TodoAction): TodoState => {
       return {
         todos: state.todos.map((todo) =>
           todo.uuid === action.payload?.uuid
-            ? { ...todo, completed: !todo.isCompleted }
+            ? { ...todo, ...action.payload }
             : todo
         ),
       };
