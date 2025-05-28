@@ -5,7 +5,7 @@ const PageLayout = ({ children }: { children: ReactNode }) => {
   return (
     <>
       <Navbar />
-      <div className="max-w-screen-lg mx-auto container px-4 py-4 pb-32">{children}</div>
+      <div className="max-w-screen-lg mx-auto container px-4 py-4 pb-[34vh]">{children}</div>
     </>
   );
 };

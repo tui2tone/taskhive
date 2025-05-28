@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 import React, {
   createContext,
@@ -7,6 +7,7 @@ import React, {
   useReducer,
   type ReactNode,
 } from "react";
+import * as service from "../services/todo";
 
 export const TodoSyncStatus = {
   INIT: 0,
@@ -49,7 +50,18 @@ interface TodoAction {
 const TodoContext = createContext<{
   state: TodoState;
   dispatch: React.Dispatch<TodoAction>;
-}>({ state: { todos: [], status: TodoSyncStatus.INIT }, dispatch: () => null });
+  addTodo: (dto: Todo) => void;
+  updateTodo: (dto: Todo) => void;
+  toggleTodo: (dto: Todo) => void;
+  deleteTodo: (dto: Todo) => void;
+}>({
+  state: { todos: [], status: TodoSyncStatus.INIT },
+  dispatch: () => null,
+  addTodo: () => {},
+  updateTodo: () => {},
+  toggleTodo: () => {},
+  deleteTodo: () => {},
+});
 
 const todoReducer = (state: TodoState, action: TodoAction): TodoState => {
   switch (action.type) {
@@ -69,18 +81,19 @@ const todoReducer = (state: TodoState, action: TodoAction): TodoState => {
     case "TODO_SYNCING_FAILED":
       return { status: TodoSyncStatus.SYNCED_FAILED, todos: [...state.todos] };
     case "ADD_TODO":
-      return { todos: [
-        ...state.todos,
-        {
-          uuid: uuidv4(),
-          ...action.payload,
-        } as Todo
-      ] };
+      return {
+        todos: [
+          ...state.todos,
+          {
+            ...action.payload,
+          } as Todo,
+        ],
+      };
     case "TOGGLE_TODO":
       return {
         todos: state.todos.map((todo) =>
           todo.uuid === action.payload?.uuid
-            ? { ...todo, isCompleted: !todo.isCompleted }
+            ? { ...todo, ...action.payload }
             : todo
         ),
       };
@@ -109,42 +122,64 @@ export const TodoProvider: React.FC<{ children: ReactNode }> = ({
   // Init Load Data
   useEffect(() => {
     const fetchData = async () => {
-      dispatch({ type: "TODO_FETCHING" });
-      setTimeout(() => {
-        const mockTodos: Todo[] = [
-          {
-            uuid: uuidv4(),
-            text: "Hello World 1",
-            priorityId: 1,
-            isCompleted: false,
-          },
-          {
-            uuid: uuidv4(),
-            text: "Hello World 2",
-            priorityId: 2,
-            isCompleted: false,
-          },
-          {
-            uuid: uuidv4(),
-            text: "Hello World 3",
-            priorityId: 3,
-            isCompleted: true,
-          },
-          {
-            uuid: uuidv4(),
-            text: "Hello World 4",
-            priorityId: 4,
-            isCompleted: true,
-          }
-        ]
-        dispatch({ type: "TODO_FETCHED_SUCCESS", todos: mockTodos });
-      }, 1000);
+      try {
+        dispatch({ type: "TODO_FETCHING" });
+        // Add Timeout for Show Loading State
+        setTimeout(async () => {
+          const results = await service.getTodos();
+          dispatch({ type: "TODO_FETCHED_SUCCESS", todos: results });
+        }, 250);
+      } catch (error) {
+        dispatch({ type: "TODO_FETCHED_FAILED" });
+      }
     };
     fetchData();
   }, []);
 
+  const addTodo = async (data: Todo) => {
+    const newTodo = {
+      uuid: uuidv4(),
+      text: data.text,
+      priorityId: data.priorityId,
+      isCompleted: false,
+    };
+    dispatch({
+      type: "ADD_TODO",
+      payload: newTodo,
+    });
+
+    await service.createTodo(newTodo);
+  };
+  const updateTodo = async (data: Todo) => {
+    dispatch({
+      type: "UPDATE_TODO",
+      payload: data,
+    });
+    await service.updateTodo(data);
+  };
+  const toggleTodo = async (data: Todo) => {
+    const toggledTodo = {
+      ...data,
+      isCompleted: !data.isCompleted,
+    } as Todo;
+    dispatch({
+      type: "TOGGLE_TODO",
+      payload: toggledTodo,
+    });
+    await service.updateTodo(toggledTodo);
+  };
+  const deleteTodo = async (data: Todo) => {
+    dispatch({
+      type: "REMOVE_TODO",
+      payload: data,
+    });
+    await service.deleteTodo(data);
+  };
+
   return (
-    <TodoContext.Provider value={{ state, dispatch }}>
+    <TodoContext.Provider
+      value={{ state, dispatch, addTodo, updateTodo, toggleTodo, deleteTodo }}
+    >
       {children}
     </TodoContext.Provider>
   );

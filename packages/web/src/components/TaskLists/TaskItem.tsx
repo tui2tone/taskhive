@@ -31,16 +31,13 @@ const TaskItem: React.FC<TaskItemProps> = ({ item }) => {
   } = useForm<TaskInputs>();
 
   const [isEdit, setIsEdit] = useState(false);
-  const { dispatch } = useTodos();
+  const { updateTodo, deleteTodo, toggleTodo } = useTodos();
   const onToggleCompleted = () => {
-    dispatch({
-      type: "TOGGLE_TODO",
-      payload: item,
-    });
+    toggleTodo(item)
   };
 
   const onRemoveItem = () => {
-    dispatch({ type: "REMOVE_TODO", payload: item });
+    deleteTodo(item)
   };
 
   const onStartEdit = () => {
@@ -51,13 +48,10 @@ const TaskItem: React.FC<TaskItemProps> = ({ item }) => {
   };
 
   const onSubmit: SubmitHandler<TaskInputs> = (data) => {
-    dispatch({
-      type: "UPDATE_TODO",
-      payload: {
+    updateTodo({
         ...item,
         text: data.text,
-      },
-    });
+      })
 
     reset({
       text: data.text,
@@ -112,7 +106,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ item }) => {
             </label>
           </div>
         </div>
-        <div className="basis-[100px]">
+        <div className="basis-[80px]">
           <div className="w-full  flex items-center justify-center">
             <PriorityBadge priorityId={item.priorityId} />
           </div>

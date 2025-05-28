@@ -54,7 +54,7 @@ const PriorityBadge: React.FC<PriorityBadgeProps> = ({
   }
   return (
     <span
-      className="px-2 py-1 rounded text-sm font-medium"
+      className="px-2 py-1 rounded text-sm font-medium w-full text-center"
       style={{
         color: matched.color,
         backgroundColor: matched.bgColor,
