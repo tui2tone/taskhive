@@ -23,9 +23,8 @@ https://taskhive.clevercat.dev
   - [x] Checkbox Toggle
   - [x] Priority Badge
   - [x] CRUD Tasks API Call
-- [ ] Todo List Filter
-  - [ ] Unfinished / Finished
-  - [ ] Priority
+- [x] Todo List Filter
+  - [x] Priority
 - [x] Loading Skeleton
 - [x] Toast Notification
 - [x] After typing, Expand for option selector for Priority, Date, Estimate Time.

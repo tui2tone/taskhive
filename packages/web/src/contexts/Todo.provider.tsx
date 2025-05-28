@@ -4,7 +4,9 @@ import React, {
   createContext,
   useContext,
   useEffect,
+  useMemo,
   useReducer,
+  useState,
   type ReactNode,
 } from "react";
 import * as service from "../services/todo";
@@ -24,6 +26,10 @@ export interface Todo {
   uuid?: string;
   priorityId?: number;
   isCompleted?: boolean;
+}
+
+export interface TodoFilter {
+  priorityId?: number;
 }
 
 interface TodoState {
@@ -54,6 +60,8 @@ const TodoContext = createContext<{
   updateTodo: (dto: Todo) => void;
   toggleTodo: (dto: Todo) => void;
   deleteTodo: (dto: Todo) => void;
+  setFilter: (dto: TodoFilter) => void;
+  filteredTodos: Todo[]
 }>({
   state: { todos: [], status: TodoSyncStatus.INIT },
   dispatch: () => null,
@@ -61,6 +69,8 @@ const TodoContext = createContext<{
   updateTodo: () => {},
   toggleTodo: () => {},
   deleteTodo: () => {},
+  setFilter: () => {},
+  filteredTodos: []
 });
 
 const todoReducer = (state: TodoState, action: TodoAction): TodoState => {
@@ -118,6 +128,16 @@ export const TodoProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [state, dispatch] = useReducer(todoReducer, { todos: [] });
+  const [filter, setFilter] = useState<TodoFilter>({
+    priorityId: 0
+  });
+
+  const filteredTodos = useMemo(() => {
+    return state.todos?.filter(m => {
+      if (filter.priorityId!== 0) return m?.priorityId === filter.priorityId
+      else return true;
+      });
+  }, [filter, state.todos]);
 
   // Init Load Data
   useEffect(() => {
@@ -178,7 +198,7 @@ export const TodoProvider: React.FC<{ children: ReactNode }> = ({
 
   return (
     <TodoContext.Provider
-      value={{ state, dispatch, addTodo, updateTodo, toggleTodo, deleteTodo }}
+      value={{ state, dispatch, addTodo, updateTodo, toggleTodo, deleteTodo, setFilter, filteredTodos }}
     >
       {children}
     </TodoContext.Provider>
